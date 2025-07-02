@@ -11,12 +11,20 @@ import SignUpPage from './pages/SignUpPage';
 import { useAuthStore } from './store/useAuthStore';
 import { useEffect } from 'react';
 
+import { Loader } from 'lucide-react';
+
 const App = () => {
   const { authUser, checkAuth } = useAuthStore();
 
   useEffect(() => { checkAuth() }, [checkAuth]);
 
   console.log({ authUser });
+
+  if (authUser === null) return (
+    <div className="flex items-center justify-center h-screen">
+      <Loader className="size-10 animate-spin" />
+    </div>
+  );
 
   return (
     <div>
