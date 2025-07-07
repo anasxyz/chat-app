@@ -1,6 +1,6 @@
-import React from 'react';
-import { useAuthStore } from '../store/auth';
-import { MessageSquare } from 'lucide-react';
+import React, { useState } from 'react';
+import { useAuthStore } from '../store/useAuthStore';
+import { MessageSquare, User } from 'lucide-react';
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
