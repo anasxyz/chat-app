@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast'
 
 import { useAuthStore } from '../store/useAuthStore';
 import AuthImagePattern from '../components/AuthImagePattern';
@@ -16,18 +17,28 @@ const SignUpPage = () => {
   const { signUp, isSigningUp } = useAuthStore();
 
   const validateForm = () => {
-    
+    if (!formData.fullName.trim()) return toast.error("Full name is required");
+    if (!formData.email.trim()) return toast.error("Email is required");
+    if (!/\S+@\S+\.\S+/.test(formData.email)) return toast.error("Invalid email format");
+    if (!formData.password) return toast.error("Password is required");
+    if (!formData.password.length < 6) return toast.error("Password must be at least 6 characters");
+
+    return true;
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const success = validateForm();
+
+    if (success === true) signUp(formData);
   }
 
   return <div className="min-h-screen grid lg:grid-cols-2">
-    { /* left side */ }
+    { /* left side */}
     <div className="flex flex-col justify-center items-center p-6 sm:p-12">
       <div className="w-full max-w-md space-y-8">
-        { /* LOGO  */ }
+        { /* LOGO  */}
         <div className="text-center mb-8">
           <div className="flex flex-col items-center gap-2 group">
             <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition colors">
@@ -37,12 +48,12 @@ const SignUpPage = () => {
             <p className="text-base-content/60">Get started with your free account</p>
           </div>
         </div>
-        
-        { /* FORM */ }
+
+        { /* FORM */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-medium">Full Name</span> 
+              <span className="label-text font-medium">Full Name</span>
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
@@ -60,7 +71,7 @@ const SignUpPage = () => {
 
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-medium">Email</span> 
+              <span className="label-text font-medium">Email</span>
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
@@ -78,7 +89,7 @@ const SignUpPage = () => {
 
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-medium">Password</span> 
+              <span className="label-text font-medium">Password</span>
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
@@ -104,13 +115,13 @@ const SignUpPage = () => {
               </button>
             </div>
           </div>
-          
+
           <button type="submit" className="btn btn-primary w-full" disabled={isSigningUp}>
             {isSigningUp ? (
-            <>
-              <Loader2 className="size-5 animate-spin" />
-              Loading...
-            </>
+              <>
+                <Loader2 className="size-5 animate-spin" />
+                Loading...
+              </>
             ) : (
               "Create Account"
             )}
@@ -128,9 +139,9 @@ const SignUpPage = () => {
       </div>
     </div>
 
-    { /* right side */ }
-    <AuthImagePattern 
-      title="Join our community"    
+    { /* right side */}
+    <AuthImagePattern
+      title="Join our community"
       subtitle="Connect with friends, share moments, and stay in touch with your loved ones."
     />
 
